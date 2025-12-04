@@ -1,0 +1,5 @@
+{
+  "name": "Excel转JSON智能工具",
+  "description": "一个强大的Excel到JSON转换器，支持可视化字段映射、实时预览以及基于Gemini AI的智能数据结构生成。",
+  "requestFramePermissions": []
+}
