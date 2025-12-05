@@ -38,7 +38,6 @@ const JsonPreview: React.FC<JsonPreviewProps> = ({ data, fields }) => {
         case FieldType.ARRAY:
           return strVal.split(/,|，/).map(s => s.trim()).filter(s => s !== '');
         case FieldType.DATE:
-             // Simple pass-through, libraries like dayjs ideal for real apps
             return strVal;
         default:
           return strVal;
@@ -86,8 +85,9 @@ const JsonPreview: React.FC<JsonPreviewProps> = ({ data, fields }) => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
-      <div className="flex justify-between items-center px-4 py-3 bg-slate-50 border-b border-slate-200">
+    <div className="flex flex-col h-full bg-white">
+      {/* Sticky Header */}
+      <div className="flex justify-between items-center px-4 py-3 bg-slate-50 border-b border-slate-200 sticky top-0 z-20">
         <h3 className="font-semibold text-slate-700">JSON 结果预览</h3>
         <div className="flex gap-2">
            <button
@@ -106,12 +106,16 @@ const JsonPreview: React.FC<JsonPreviewProps> = ({ data, fields }) => {
           </button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto bg-slate-900 p-4">
+      
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-auto bg-slate-900 p-4 custom-scrollbar">
         <pre className="text-sm font-mono text-green-400 whitespace-pre-wrap">
           {jsonString}
         </pre>
       </div>
-      <div className="px-4 py-2 bg-slate-100 text-xs text-slate-500 border-t border-slate-200">
+      
+      {/* Footer Status */}
+      <div className="px-4 py-2 bg-slate-100 text-xs text-slate-500 border-t border-slate-200 z-10">
         共生成 {transformedData.length} 个对象
       </div>
     </div>

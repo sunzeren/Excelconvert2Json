@@ -1,26 +1,27 @@
 import React, { useCallback } from 'react';
 import { Upload, FileSpreadsheet } from 'lucide-react';
-import { ExcelData } from '../types';
-import { parseExcelFile } from '../services/excelService';
+import * as XLSX from 'xlsx';
+import { readExcelWorkbook } from '../services/excelService';
 
 interface FileUploadProps {
-  onDataLoaded: (data: ExcelData) => void;
+  onWorkbookLoaded: (workbook: XLSX.WorkBook, fileName: string) => void;
   isLoading: boolean;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onDataLoaded, isLoading }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onWorkbookLoaded, isLoading }) => {
   const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
-        const data = await parseExcelFile(file);
-        onDataLoaded(data);
+        // Just read the workbook, don't parse specific sheet yet
+        const workbook = await readExcelWorkbook(file);
+        onWorkbookLoaded(workbook, file.name);
       } catch (error) {
-        console.error("Parse error:", error);
-        alert("解析Excel文件失败，请确保格式正确。");
+        console.error("Read error:", error);
+        alert("读取Excel文件失败，请确保格式正确。");
       }
     }
-  }, [onDataLoaded]);
+  }, [onWorkbookLoaded]);
 
   return (
     <div className="w-full max-w-xl mx-auto mt-10 p-8 border-2 border-dashed border-slate-300 rounded-xl bg-white hover:bg-slate-50 transition-colors text-center shadow-sm">

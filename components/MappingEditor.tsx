@@ -53,8 +53,9 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow border border-slate-200">
-      <div className="p-4 border-b border-slate-200 bg-slate-50">
+    <div className="flex flex-col h-full bg-white">
+      {/* Header - Sticky for mobile scrolling */}
+      <div className="p-4 border-b border-slate-200 bg-slate-50 sticky top-0 z-20">
         <h3 className="font-semibold text-slate-800 flex items-center gap-2">
           <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
           字段映射配置
@@ -64,8 +65,8 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
         </p>
       </div>
 
-      {/* AI Assistant Section */}
-      <div className="p-4 bg-indigo-50 border-b border-indigo-100">
+      {/* AI Assistant Section - Sticky below header */}
+      <div className="p-4 bg-indigo-50 border-b border-indigo-100 sticky top-[84px] z-10">
         <label className="block text-sm font-medium text-indigo-900 mb-2 flex items-center gap-2">
           <Wand2 className="w-4 h-4 text-indigo-600" />
           AI 智能助手
@@ -74,7 +75,7 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
           <input
             type="text"
             className="flex-1 rounded-md border-indigo-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2"
-            placeholder="描述你想要的JSON格式 (例如: '包含姓名、邮箱和地址的用户列表')"
+            placeholder="描述想要的JSON格式 (例如: '包含姓名和地址的用户')"
             value={userPrompt}
             onChange={(e) => setUserPrompt(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAiSuggest()}
@@ -82,7 +83,7 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
           <button
             onClick={handleAiSuggest}
             disabled={isAiLoading || !userPrompt.trim()}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
           >
             {isAiLoading ? '生成中...' : '自动生成'}
           </button>
@@ -90,18 +91,18 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
         {aiError && <p className="text-red-500 text-xs mt-2">{aiError}</p>}
       </div>
 
-      {/* Mapping List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      {/* Mapping List - Scrollable */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 scroll-smooth">
         {fields.length === 0 ? (
-          <div className="text-center py-10 text-slate-400 border-2 border-dashed border-slate-200 rounded-lg">
+          <div className="text-center py-10 text-slate-400 border-2 border-dashed border-slate-200 rounded-lg mx-2">
             <p>暂无映射字段</p>
-            <button onClick={addField} className="text-blue-600 hover:underline mt-2 text-sm">点击添加字段</button>
+            <button onClick={addField} className="text-blue-600 hover:underline mt-2 text-sm">点击下方按钮添加</button>
           </div>
         ) : (
           fields.map((field, index) => (
             <div key={field.id} className="flex flex-col sm:flex-row gap-3 items-start sm:items-center bg-slate-50 p-3 rounded-md border border-slate-200 group hover:border-blue-300 transition-colors">
               <div className="flex-1 w-full">
-                <label className="block text-xs font-medium text-slate-500 mb-1">目标 JSON 键名 (Key)</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1">目标 Key</label>
                 <input
                   type="text"
                   value={field.targetKey}
@@ -114,7 +115,7 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
               <ArrowRight className="hidden sm:block w-4 h-4 text-slate-400 mt-5" />
 
               <div className="flex-1 w-full">
-                <label className="block text-xs font-medium text-slate-500 mb-1">Excel 来源列</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Excel 列</label>
                 <select
                   value={field.sourceColumn}
                   onChange={(e) => updateField(field.id, { sourceColumn: e.target.value })}
@@ -129,7 +130,7 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
                 </select>
               </div>
 
-              <div className="w-full sm:w-32">
+              <div className="w-full sm:w-28">
                  <label className="block text-xs font-medium text-slate-500 mb-1">类型</label>
                 <select
                   value={field.type}
@@ -156,7 +157,8 @@ const MappingEditor: React.FC<MappingEditorProps> = ({ excelHeaders, fields, set
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-200 bg-slate-50">
+      {/* Footer Button - Fixed at bottom of card */}
+      <div className="p-4 border-t border-slate-200 bg-slate-50 z-10">
         <button
           onClick={addField}
           className="w-full flex items-center justify-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
