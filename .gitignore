@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Lockfiles: this project uses bun.lock, ignore npm's lockfile
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
